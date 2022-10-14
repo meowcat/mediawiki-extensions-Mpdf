@@ -93,7 +93,20 @@ class MpdfAction extends Action {
 					$orientation = $matches[1];
 				}
 			}
-			$mpdf = new mPDF( $mode, $format, 0, '', $marginLeft, $marginRight, $marginTop, $marginBottom, $marginHeader, $marginFooter, $orientation );
+			$mpdf = new \Mpdf\Mpdf([
+				'tempDir' => '/tmp',
+				'mode' => $mode, 
+				'format' => $format, 
+				'default_font_size' => 0, 
+				# '', 
+				'margin_left' => $marginLeft, 
+				'margin_left' => $marginRight, 
+				'margin_left' => $marginTop, 
+				'margin_left' => $marginBottom, 
+				'margin_left' => $marginHeader, 
+				'margin_left' => $marginFooter,
+				'orientation' => $orientation 
+				] );
 
 			// Suppress warning messages, because the mPDF library
 			// itself generates warnings (due to trying to add
@@ -107,6 +120,9 @@ class MpdfAction extends Action {
 				wfSuppressWarnings();
 			}
 			$mpdf->WriteHTML( $html );
+
+
+			$mpdf->Output( $filename . '.pdf', 'D' );
 			if ( function_exists( '\Wikimedia\restoreWarnings' ) ) {
 				// MW 1.31+
 				\Wikimedia\restoreWarnings();
@@ -114,7 +130,6 @@ class MpdfAction extends Action {
 				wfRestoreWarnings();
 			}
 
-			$mpdf->Output( $filename . '.pdf', 'D' );
 		}
 		$output->disable();
 	}
